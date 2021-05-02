@@ -1,7 +1,11 @@
 package services
 
 import (
+
+
 	"github.com/golang-microservice/user-api/domain/users"
+
+	"github.com/golang-microservice/user-api/utils/date_utils"
 	"github.com/golang-microservice/user-api/utils/errors"
 )
 
@@ -19,6 +23,9 @@ func CreateUser(user users.User) (*users.User, *errors.RestErr) {
 	if err := user.Validate(); err != nil {
 		return nil, err
 	}
+	user.Status = users.StatusActive
+	user.DateCreated = date_utils.GetNowDBFormat()
+
 	if err := user.Save(); err != nil {
 		return nil, err
 	}
@@ -61,4 +68,10 @@ func DeleteUser(userId int64) *errors.RestErr {
 		return err
 	}
 	return current.Delete()
+}
+
+func FindByStatus(status string) ([]users.User, *errors.RestErr) {
+	dao := &users.User{}
+	return dao.FindByStatus(status)
+
 }
