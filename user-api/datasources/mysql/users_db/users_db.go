@@ -26,4 +26,5 @@ func init() {
 	}
 
 	log.Println("database successfully configured")
+	
 }
