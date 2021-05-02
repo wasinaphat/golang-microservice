@@ -53,6 +53,6 @@ func (user *User) Save() *errors.RestErr {
 		return errors.NewInternalServerError(fmt.Sprintf("error when trying to save user %s", err.Error()))
 	}
 	user.Id = userId
-
+//
 	return nil
 }
