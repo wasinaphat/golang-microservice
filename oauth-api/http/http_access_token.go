@@ -6,10 +6,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-microservice/oauth-api/domain/access_token"
+	"github.com/golang-microservice/oauth-api/utils/errors"
 )
 
 type AccessTokenHandler interface {
 	GetById(c *gin.Context)
+	Create(c *gin.Context)
 }
 type accessTokenHandler struct {
 	service access_token.Service
@@ -22,7 +24,6 @@ func NewHandler(service access_token.Service) AccessTokenHandler {
 
 }
 
-
 func (handler *accessTokenHandler) GetById(c *gin.Context) {
 	accessToken, err := handler.service.GetById(strings.TrimSpace(c.Param("access_token_id")))
 	if err != nil {
@@ -30,5 +31,18 @@ func (handler *accessTokenHandler) GetById(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, accessToken)
+}
 
+func (handler *accessTokenHandler) Create(c *gin.Context) {
+	var at access_token.AccessToken
+	if err := c.ShouldBindJSON(&at); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		c.JSON(restErr.Status, restErr)
+		return
+	}
+	if err := handler.service.Create(at); err != nil {
+		c.JSON(err.Status, err)
+		return
+	}
+	c.JSON(http.StatusCreated, at)
 }

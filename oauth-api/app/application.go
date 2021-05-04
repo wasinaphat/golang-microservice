@@ -17,18 +17,10 @@ var (
 func StartApplication() {
 
 	fmt.Println("START APPLICATION")
-	// session, dbErr := cassandra.GetSession()
-	// if dbErr != nil {
-	// 	panic(dbErr)
-
-	// }
-
-	// defer session.Close()
-
 
 	atHandler := http.NewHandler(access_token.NewService(db.NewRepository()))
 	router.GET("/oauth/access_token/:access_token_id", atHandler.GetById)
-	router.GET("/test")
+	router.POST("/oauth/access_token", atHandler.Create)
 
 	router.Run(":8080")
 }
