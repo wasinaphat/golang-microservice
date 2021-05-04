@@ -1,7 +1,6 @@
 package access_token
 
 import (
-
 	"time"
 )
 
@@ -15,6 +14,7 @@ type AccessToken struct {
 	ClientId    int64  `json:"client_id"`
 	Expires     int64  `json:"expires"`
 }
+
 
 func GetNewAccessToken() AccessToken {
 	return AccessToken{
